@@ -1,4 +1,4 @@
-TARGET := iphone:clang:14.5:13.0
+TARGET := iphone:clang:16.5:14.0
 ARCHS = arm64 arm64e
 export ADDITIONAL_CFLAGS = -DTHEOS_LEAN_AND_MEAN -fobjc-arc
 
@@ -7,7 +7,7 @@ include $(THEOS)/makefiles/common.mk
 TOOL_NAME = fouldecrypt flexdecrypt2 foulwrapper
 
 # export USE_TFP0 = 1
-export USE_LIBKRW = 1
+# export USE_LIBKRW = 1
 # export USE_LIBKERNRW = 1
 
 fouldecrypt_FILES = main.cpp foulmain.cpp

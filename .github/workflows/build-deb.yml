@@ -2,17 +2,18 @@ name: C/C++ CI
 
 on:
   push:
-    #tags:
-    #  - 'v*'
+    tags:
+     - 'v*'
 
     #branches: [ master ]
 
 jobs:
   build:
-    runs-on: macos-latest
+    runs-on: macos-14
     strategy:
       matrix:
-        provider: [TFP0, LIBKRW, LIBKERNRW]
+        #provider: [TFP0, LIBKRW, LIBKERNRW]
+        provider: [TFP0]
 
     steps:
       - uses: actions/checkout@v2
@@ -20,13 +21,14 @@ jobs:
           submodules: recursive
 
       - name: Prepare Theos
-        uses: Randomblock1/theos-action@v1
+        uses: und3fined/theos-action@main
 
       - name: Build package
         run: |
           rm -f packages/*
           cp control.template control
           if [[ ${{matrix.provider}} == TFP0 ]]; then
+            sed -i '' 's/{{.depends}}/firmware (>= 14.0)/g' control
             USE_TFP0=1 make package FINALPACKAGE=1
           elif [[ ${{matrix.provider}} == LIBKRW ]]; then
             sed -i '' 's/{{.depends}}/libkrw/g' control
@@ -36,7 +38,7 @@ jobs:
             USE_LIBKERNRW=1 make package FINALPACKAGE=1
           fi
       - name: Publish artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: fouldecrypt-${{matrix.provider}}
           path: ${{ github.workspace }}/packages/*.deb
